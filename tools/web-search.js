@@ -29,7 +29,16 @@ export const webSearchTool = {
             throw new Error("TAVILY_API_KEY environment variable is not set.");
         }
         const client = new TavilyClient({ apiKey });
-        const results = await client.search({ query, numResults });
-        return results.results.map((r, i) => `${i + 1}. ${r.title}\n${r.content}`).join("\n\n");
+        const results = await client.search({ query, max_results: numResults });
+        return JSON.stringify(
+            results.results.map((r, i) => ({
+                rank: i + 1,
+                title: r.title,
+                snippet: r.content,
+                url: r.url
+            })),
+            null,
+            2
+        );
     }
 };

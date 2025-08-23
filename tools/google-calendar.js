@@ -2,45 +2,47 @@ export const googleCalendarTool = {
   type: "function",
   function: {
     name: "create_google_calendar_event",
-    description: "Creates a google calendar event",
+    description: "Creates a Google Calendar event.",
     parameters: {
       type: "object",
       properties: {
         title: { type: "string", description: "Title of the event" },
-        start_time: {
-          type: "string",
-          description: "Start time of the event in ISO 8601 format (e.g., 2025-08-24T17:00:00)",
-        },
-        end_time: {
-          type: "string",
-          description: "End time of the event in ISO 8601 format (e.g., 2025-08-24T18:00:00)",
-        },
-        timezone: {
-          type: "string",
-          description: "Timezone of the event (e.g., UTC, Asia/Kolkata)",
-        },
-        description: { type: "string", description: "Description of the event" },
-        participants: {
+        start: { type: "string", description: "Start time ISO 8601 (e.g., 2025-08-24T10:00:00Z)" },
+        end: { type: "string", description: "End time ISO 8601 (e.g., 2025-08-24T11:00:00Z)" },
+        attendees: {
           type: "array",
           items: { type: "string" },
-          description: "List of participants' emails",
+          description: "List of attendee emails"
         },
+        description: { type: "string", description: "Description/agenda", nullable: true },
+        timezone: { type: "string", description: "IANA timezone (e.g., UTC, Asia/Kolkata)", nullable: true }
       },
-      required: ["title", "start_time", "end_time"],
-    },
+      required: ["title", "start", "end"]
+    }
   },
-  async call({ title, start_time, end_time, timezone, description, participants }) {
-    // For this example, we'll just simulate the action
-    console.log("Creating Google Calendar event:", {
-      title,
-      start_time,
-      end_time,
-      timezone,
-      description,
-      participants,
-    });
-    return `Event '${title}' scheduled from ${start_time} to ${end_time} (${timezone || "UTC"}) with participants: ${
-      participants?.length ? participants.join(", ") : "None"
-    }`;
+
+  // 🔧 Simulated call — replace with real Google Calendar API
+  async call({ title, start, end, attendees = [], description = "", timezone = "UTC" }) {
+    // Basic validation
+    if (!title || !start || !end) {
+      return { success: false, error: "Missing required fields (title/start/end)." };
+    }
+    // Pretend we created an event ID & link
+    const eventId = `evt_${Math.random().toString(36).slice(2, 10)}`;
+    const htmlLink = `https://calendar.google.com/calendar/u/0/r/eventedit/${eventId}`;
+
+    return {
+      success: true,
+      event: {
+        id: eventId,
+        title,
+        start,
+        end,
+        attendees,
+        description,
+        timezone,
+        htmlLink
+      }
+    };
   }
 };
