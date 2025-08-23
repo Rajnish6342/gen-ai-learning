@@ -29,4 +29,18 @@ export const googleCalendarTool = {
       required: ["title", "start_time", "end_time"],
     },
   },
+  async call({ title, start_time, end_time, timezone, description, participants }) {
+    // For this example, we'll just simulate the action
+    console.log("Creating Google Calendar event:", {
+      title,
+      start_time,
+      end_time,
+      timezone,
+      description,
+      participants,
+    });
+    return `Event '${title}' scheduled from ${start_time} to ${end_time} (${timezone || "UTC"}) with participants: ${
+      participants?.length ? participants.join(", ") : "None"
+    }`;
+  }
 };

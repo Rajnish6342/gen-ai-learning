@@ -18,11 +18,7 @@ export async function createGoogleCalendarEvent(userInput) {
     const toolCall = message.tool_calls[0];
     if (toolCall.function.name === "create_google_calendar_event") {
       const args = JSON.parse(toolCall.function.arguments);
-
-      // Here’s where you’d call Google Calendar API
-      return `✅ Event '${args.title}' from ${args.start_time} to ${args.end_time} (${args.timezone || "UTC"}) with participants: ${
-        args.participants?.length ? args.participants.join(", ") : "None"
-      }`;
+      googleCalendarTool.call(args);
     }
   }
   return message.content || "No event created.";
