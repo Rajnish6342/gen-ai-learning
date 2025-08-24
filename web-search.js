@@ -35,6 +35,12 @@ function loadAllHistories() {
                     - If the user query can be answered from memory or previous conversation, you may use memory.
                     - When calling the tool, return the data in a structured way so it can be used for refinement.
                     - ALWAYS clarify if the information is from memory vs web search.
+                    - The web-search tool returns results in JSON array with rank, title, snippet, and url.
+                    - Use the web search results to provide accurate and up-to-date information.
+                    - If the user query is unrelated to recent events or factual info, you may respond based on memory alone.
+                    - ALWAYS think step-by-step about whether web search is needed.
+                    - Current date: ${new Date().toISOString().split("T")[0]}
+                    - User location: India
                     `
             }
         ];
