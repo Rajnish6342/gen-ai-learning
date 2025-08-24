@@ -80,10 +80,8 @@ export async function performWebSearch(userInput) {
         // Step 2: Handle tool calls
         let toolResults = [];
         if (message.tool_calls && Array.isArray(message.tool_calls)) {
-            for (const toolCall of message.tool_calls) {
-                const result = await handleToolCall(toolCall, [webSearchTool]);
-                toolResults.push(result);
-            }
+          const results = await handleToolCall(message, [webSearchTool]);
+          toolResults.push(...results);
         }
         let finalAnswer;
         if (toolResults.length > 0) {
@@ -92,7 +90,12 @@ export async function performWebSearch(userInput) {
                 messages: [
                     ...conversationHistory,
                     { role: "assistant", content: "Here are the raw web search results:" },
-                    ...toolResults.map(result => ({ role: "assistant", content: result })),
+                    ...toolResults.map(res => {
+                        const contentStr = res.success
+                            ? (typeof res.data === "string" ? res.data : JSON.stringify(res.data, null, 2))
+                            : `Error executing tool "${res.tool}": ${res.error}`;
+                        return { role: "assistant", content: contentStr };
+                    }),
                     { role: "user", content: "Please refine this into a clear, final answer." }
                 ],
                 temperature: 0
