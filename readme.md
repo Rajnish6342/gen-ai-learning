@@ -165,6 +165,52 @@ const response = await groq.chat.completions.create({
 
 ### 7. 🔑 Key Model Concepts
 
+#### Mindmap (Overview)
+
+```mermaid
+mindmap
+  root((Key Model Concepts))
+    Parameters
+      LLaMA-3: 8B to 405B
+      More parameters = more capability
+    Temperature
+      0 = Deterministic
+      Higher = Creative or Random
+    Sampling
+      Top-k: Pick from top K tokens
+      Top-p Nucleus: Pick from smallest set with probability >= p
+    Embeddings
+      Vector representations of text
+      Used in RAG, clustering, semantic search
+    Hallucination
+      Confident but false output
+      Mitigation
+        RAG
+        Tool Calls
+        Fact checking
+
+```
+---
+
+#### Flowchart (Process + Mitigation)
+```mermaid
+flowchart TD
+    A[User Prompt] --> B[Model Processing]
+
+    B --> C[Parameters<br/>Billions of weights<br/>e.g., LLaMA-3 8B–405B]
+    B --> D[Temperature<br/>0 = Deterministic<br/>High = Creative/Random]
+    B --> E[Sampling<br/>Top-k / Top-p]
+    B --> F[Embeddings<br/>Text → Vector<br/>Used in RAG, Search, Clustering]
+    B --> G[Hallucination<br/>False but confident answers]
+
+    G --> H[Mitigations]
+    H --> H1[RAG]
+    H --> H2[Tool Calls]
+    H --> H3[Fact Checking]
+```
+
+---
+
 #### 📐 Parameters
 - **Definition**: Internal weights that define the model’s knowledge.  
 - **Scale**: Modern LLMs have **billions of parameters**.  
