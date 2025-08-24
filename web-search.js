@@ -5,7 +5,6 @@ import { handleToolCall } from "./helpers/tool-handler.js";
 const groq = new Groq();
 
 export async function performWebSearch(userInput) {
-    // Step 1: Ask LLM with tool support
     const response = await groq.chat.completions.create({
         model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
         messages: [{ role: "user", content: userInput }],
@@ -16,18 +15,28 @@ export async function performWebSearch(userInput) {
 
     const message = response.choices[0].message;
 
-    // Step 2: Execute the tool
-    const toolResult = await handleToolCall(message, [webSearchTool]);
+    // Step 2: Handle multiple tool calls
+    let toolResults = [];
+    if (message.tool_calls && Array.isArray(message.tool_calls)) {
+        for (const toolCall of message.tool_calls) {
+            const result = await handleToolCall(toolCall, [webSearchTool]);
+            toolResults.push(result);
+        }
+    } else {
+        // Fallback for single tool call or no tool call
+        const result = await handleToolCall(message, [webSearchTool]);
+        if (result) toolResults.push(result);
+    }
 
-    if (toolResult) {
-        // Step 3: Reprocess tool result with LLM
+    if (toolResults.length > 0) {
+        // Step 3: Reprocess all tool results with LLM
         const followUp = await groq.chat.completions.create({
             model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
             messages: [
                 { role: "system", content: "You are a financial assistant. Always return concise, factual answers." },
                 { role: "user", content: userInput },
-                { role: "assistant", content: "Here is the raw web search result:" },
-                { role: "assistant", content: toolResult },
+                { role: "assistant", content: "Here are the raw web search results:" },
+                ...toolResults.map(result => ({ role: "assistant", content: result })),
                 { role: "user", content: "Please refine this into a clear, final answer." }
             ],
             temperature: 0,
@@ -41,7 +50,7 @@ export async function performWebSearch(userInput) {
 
 // Example usage
 if (import.meta.url === `file://${process.argv[1]}`) {
-    const userInput = "Return the 24K gold price in India per 10 grams (August 2025). Do not expand or rephrase this query.";
+    const userInput = "Midcap stocks in India with good quarterly results as of August 2025";
     performWebSearch(userInput)
         .then(console.log)
         .catch(console.error);

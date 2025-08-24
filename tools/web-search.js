@@ -22,7 +22,13 @@ export const webSearchTool = {
         }
     },
 
-    // Custom implementation (your own call handler)
+    /**
+     * Searches the web for recent information using the Tavily API.
+     * @param {Object} params - The parameters for the search.
+     * @param {string} params.query - The search query string.
+     * @param {number} [params.numResults=3] - Number of results to return.
+     * @returns {Promise<string>} A JSON string containing an array of search results with rank, title, snippet, and url.
+     */
     async call({ query, numResults = 3 }) {
         const apiKey = process.env.TAVILY_API_KEY;
         if (!apiKey) {
@@ -37,8 +43,6 @@ export const webSearchTool = {
                 snippet: r.content,
                 url: r.url
             })),
-            null,
-            2
         );
     }
 };
