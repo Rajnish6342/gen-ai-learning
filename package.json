@@ -11,7 +11,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@langchain/community": "^0.3.53",
+    "@langchain/core": "^0.3.72",
+    "@langchain/openai": "^0.6.9",
+    "@langchain/redis": "^0.1.1",
+    "@langchain/textsplitters": "^0.1.0",
     "groq-sdk": "^0.30.0",
+    "openai": "^5.15.0",
+    "pdf-parse": "^1.1.1",
+    "redis": "^5.8.2",
     "tavily": "^1.0.2"
   }
 }
