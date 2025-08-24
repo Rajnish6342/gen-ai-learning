@@ -35,7 +35,9 @@ export const webSearchTool = {
             throw new Error("TAVILY_API_KEY environment variable is not set.");
         }
         const client = new TavilyClient({ apiKey });
-        const results = await client.search({ query, max_results: numResults });
+        console.log("Performing web search for query:", query);
+        const results = await client.search({ query, max_results: numResults,search_depth: "advanced" });
+        console.log(`Web search returned ${results.results.length} results.`);
         return JSON.stringify(
             results.results.map((r, i) => ({
                 rank: i + 1,

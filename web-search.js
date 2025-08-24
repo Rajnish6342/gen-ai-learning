@@ -29,7 +29,13 @@ function loadAllHistories() {
         if (files.length === 0) return [
             {
                 role: "system",
-                content: "You are a helpful assistant that uses web search results to answer queries."
+                content: `
+                    You are an assistant that ALWAYS checks the latest information using web search when the user asks a factual or time-sensitive question.
+                    - You MUST call the "web-search" if the answer may be outdated, incomplete, or requires up-to-date info.
+                    - If the user query can be answered from memory or previous conversation, you may use memory.
+                    - When calling the tool, return the data in a structured way so it can be used for refinement.
+                    - ALWAYS clarify if the information is from memory vs web search.
+                    `
             }
         ];
 
